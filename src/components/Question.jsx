@@ -6,6 +6,16 @@ import { useState } from "react";
 export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
   const [answer, setAnswer] = useState({ selectedAnswer: "", isCorrect: null });
 
+  let timer = 10000;
+
+  if (answer.selectedAnswer) {
+    timer = 1000;
+  }
+
+  if (answer.isCorrect !== null) {
+    timer = 2000;
+  }
+
   function handleSelectAnswer(answer) {
     //still null because we dont know if its right or wrong
     setAnswer({ selectedAnswer: answer, isCorrect: null });
@@ -35,9 +45,10 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
       <QuestionTimer
         //with the key property we can make this component rerender
         //when the question changes
-        //key={activeQuestionIndex}
-        timeout={10000}
-        onTimeout={onSkipAnswer}
+        key={timer}
+        timeout={timer}
+        onTimeout={answer.selectedAnswer === "" ? onSkipAnswer : null}
+        mode={answerState}
       />
       <h2>{questions[index].text}</h2>
       <Answers
